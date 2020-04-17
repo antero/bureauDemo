@@ -5,6 +5,8 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
 
 @Entity
@@ -13,7 +15,10 @@ public class Translator {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+    @NotEmpty(message = "Name must not be empty")
     private String name;
+    @Email(message = "Email must be a valid email")
+    @NotEmpty(message = "Email must not be empty")
     private String email;
     @CreatedDate
     private LocalDateTime created;

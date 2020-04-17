@@ -1,9 +1,9 @@
 package com.bw.translatorCRUD.service;
 
 import com.bw.translatorCRUD.model.Translator;
+import com.bw.translatorCRUD.model.TranslatorDetails;
 
 import java.util.List;
-import java.util.Map;
 
 public interface TranslatorService {
     List<Translator> findAll();
@@ -12,7 +12,7 @@ public interface TranslatorService {
 
     Translator findById(Long id);
 
-    Translator update(Long id, Map<String, Object> payload);
+    Translator update(Long id, TranslatorDetails translatorDetails);
 
     void deleteById(Long id);
 }

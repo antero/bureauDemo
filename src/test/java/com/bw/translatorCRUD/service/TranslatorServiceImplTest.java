@@ -2,15 +2,14 @@ package com.bw.translatorCRUD.service;
 
 import com.bw.translatorCRUD.exception.TranslatorNotFoundException;
 import com.bw.translatorCRUD.model.Translator;
+import com.bw.translatorCRUD.model.TranslatorDetails;
 import com.bw.translatorCRUD.repository.TranslatorRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -66,12 +65,8 @@ class TranslatorServiceImplTest {
         Translator t1 = new Translator("Fulano Silva", "fulano@gmail.com");
         translatorRepository.save(t1);
 
-        Map<String, Object> payload = new HashMap<>() {
-            {
-                put("name", "Fulano Arruda");
-            }
-        };
-        Translator updatedT1 = translatorService.update(t1.getId(), payload);
+        TranslatorDetails translatorDetails = new TranslatorDetails("Fulano Arruda", null);
+        Translator updatedT1 = translatorService.update(t1.getId(), translatorDetails);
 
         assertEquals(t1.getId(), updatedT1.getId());
         assertEquals(t1.getEmail(), updatedT1.getEmail());

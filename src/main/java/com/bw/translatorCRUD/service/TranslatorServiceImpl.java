@@ -2,13 +2,14 @@ package com.bw.translatorCRUD.service;
 
 import com.bw.translatorCRUD.exception.TranslatorNotFoundException;
 import com.bw.translatorCRUD.model.Translator;
+import com.bw.translatorCRUD.model.TranslatorDetails;
 import com.bw.translatorCRUD.repository.TranslatorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class TranslatorServiceImpl implements TranslatorService {
@@ -32,11 +33,11 @@ public class TranslatorServiceImpl implements TranslatorService {
     }
 
     @Override
-    public Translator update(Long id, Map<String, Object> payload) {
+    public Translator update(Long id, TranslatorDetails translatorDetails) {
         Translator translator = findById(id);
 
-        translator.setName((String) payload.getOrDefault("name", translator.getName()));
-        translator.setEmail((String) payload.getOrDefault("email", translator.getEmail()));
+        translator.setName(Optional.ofNullable(translatorDetails.getName()).orElse(translator.getName()));
+        translator.setEmail(Optional.ofNullable(translatorDetails.getEmail()).orElse(translator.getEmail()));
 
         return translatorRepository.save(translator);
     }
