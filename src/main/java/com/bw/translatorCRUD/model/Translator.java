@@ -1,17 +1,38 @@
 package com.bw.translatorCRUD.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class Translator {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private String name;
     private String email;
+    @CreatedDate
+    private LocalDateTime created;
+    @LastModifiedDate
+    private LocalDateTime modified;
+
+    public Translator(){}
+
+    public Translator(String name, String email) {
+        this.name = name;
+        this.email = email;
+    }
+
+    public Translator(long id, String name, String email) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+    }
+
 
     public long getId() {
         return id;
@@ -35,5 +56,21 @@ public class Translator {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public LocalDateTime getCreated() {
+        return created;
+    }
+
+    public void setCreated(LocalDateTime created) {
+        this.created = created;
+    }
+
+    public LocalDateTime getModified() {
+        return modified;
+    }
+
+    public void setModified(LocalDateTime modified) {
+        this.modified = modified;
     }
 }
