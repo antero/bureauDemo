@@ -1,5 +1,6 @@
 package com.bw.translatorCRUD.service;
 
+import com.bw.translatorCRUD.model.TranslationSkill;
 import com.bw.translatorCRUD.model.Translator;
 import com.bw.translatorCRUD.model.TranslatorDetails;
 
@@ -15,4 +16,6 @@ public interface TranslatorService {
     Translator update(Long id, TranslatorDetails translatorDetails);
 
     void deleteById(Long id);
+
+    Translator addTranslationSkills(Long id, List<TranslationSkill> translationSkills);
 }

@@ -1,10 +1,10 @@
 package com.bw.translatorCRUD.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import java.util.Set;
 
 @Entity
 public class TranslationSkill {
@@ -15,6 +15,10 @@ public class TranslationSkill {
     private String sourceLanguage;
     @NotEmpty
     private String targetLanguage;
+
+    @ManyToMany(mappedBy = "translationSkills")
+    @JsonIgnoreProperties("translationSkills")
+    private Set<Translator> translators;
 
     public TranslationSkill() {}
 
@@ -45,5 +49,13 @@ public class TranslationSkill {
 
     public void setTargetLanguage(String targetLanguage) {
         this.targetLanguage = targetLanguage.toLowerCase();
+    }
+
+    public Set<Translator> getTranslators() {
+        return translators;
+    }
+
+    public void setTranslators(Set<Translator> translators) {
+        this.translators = translators;
     }
 }

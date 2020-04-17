@@ -1,5 +1,6 @@
 package com.bw.translatorCRUD.controller;
 
+import com.bw.translatorCRUD.model.TranslationSkill;
 import com.bw.translatorCRUD.model.Translator;
 import com.bw.translatorCRUD.model.TranslatorDetails;
 import com.bw.translatorCRUD.service.TranslatorService;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("translators")
@@ -42,5 +44,11 @@ public class TranslatorController {
     public ResponseEntity<Object> delete(@PathVariable Long id) {
         translatorService.deleteById(id);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{id}/addSkills")
+    public ResponseEntity<Object> addTranslationSkills(@PathVariable Long id, @RequestBody List<@Valid TranslationSkill> translationSkills) {
+        Translator translator = translatorService.addTranslationSkills(id, translationSkills);
+        return ResponseEntity.ok(translator);
     }
 }

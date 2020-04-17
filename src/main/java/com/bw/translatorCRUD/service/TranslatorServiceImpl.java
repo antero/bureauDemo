@@ -1,20 +1,28 @@
 package com.bw.translatorCRUD.service;
 
 import com.bw.translatorCRUD.exception.TranslatorNotFoundException;
+import com.bw.translatorCRUD.model.TranslationSkill;
 import com.bw.translatorCRUD.model.Translator;
 import com.bw.translatorCRUD.model.TranslatorDetails;
+import com.bw.translatorCRUD.repository.TranslationSkillRepository;
 import com.bw.translatorCRUD.repository.TranslatorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TranslatorServiceImpl implements TranslatorService {
     @Autowired
     private TranslatorRepository translatorRepository;
+
+    @Autowired
+    private TranslationSkillService translationSkillService;
 
     @Override
     public List<Translator> findAll() {
@@ -49,5 +57,21 @@ public class TranslatorServiceImpl implements TranslatorService {
         } catch (EmptyResultDataAccessException e) {
             throw new TranslatorNotFoundException(id);
         }
+    }
+
+    @Override
+    public Translator addTranslationSkills(Long id, List<TranslationSkill> translationSkills) {
+        Translator translator = findById(id);
+
+        LinkedHashSet<Pair<String, String>> skillsHashSet = new LinkedHashSet<>(
+                translationSkills.stream().map(s -> Pair.of(s.getSourceLanguage(), s.getTargetLanguage()))
+                                          .collect(Collectors.toList())
+        );
+
+        skillsHashSet.stream()
+                     .map(p -> translationSkillService.getOrCreateLanguagePair(p.getFirst(), p.getSecond()))
+                     .forEach(s -> translator.getTranslationSkills().add(s));
+
+        return translatorRepository.save(translator);
     }
 }

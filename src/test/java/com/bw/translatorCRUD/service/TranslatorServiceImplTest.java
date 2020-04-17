@@ -1,6 +1,7 @@
 package com.bw.translatorCRUD.service;
 
 import com.bw.translatorCRUD.exception.TranslatorNotFoundException;
+import com.bw.translatorCRUD.model.TranslationSkill;
 import com.bw.translatorCRUD.model.Translator;
 import com.bw.translatorCRUD.model.TranslatorDetails;
 import com.bw.translatorCRUD.repository.TranslatorRepository;
@@ -84,5 +85,18 @@ class TranslatorServiceImplTest {
     @Test
     void deleteByIdWithInvalidId() {
         assertThrows(TranslatorNotFoundException.class, () -> translatorService.deleteById(1L));
+    }
+
+    @Test
+    void addTranslationSkills() {
+        Translator t1 = new Translator("Fulano Silva", "fulano@gmail.com");
+        translatorRepository.save(t1);
+
+        TranslationSkill ts1 = new TranslationSkill("pt_br", "en_us");
+        TranslationSkill ts2 = new TranslationSkill("en_us", "pt_br");
+
+        t1 = translatorService.addTranslationSkills(t1.getId(), Arrays.asList(ts1, ts2));
+
+        assertEquals(2, t1.getTranslationSkills().size());
     }
 }

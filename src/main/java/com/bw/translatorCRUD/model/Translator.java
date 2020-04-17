@@ -1,5 +1,6 @@
 package com.bw.translatorCRUD.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -8,6 +9,8 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
@@ -25,7 +28,13 @@ public class Translator {
     @LastModifiedDate
     private LocalDateTime modified;
 
-    public Translator(){}
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JsonIgnoreProperties("translators")
+    private Set<TranslationSkill> translationSkills;
+
+    public Translator(){
+        this.translationSkills = new HashSet<>();
+    }
 
     public Translator(String name, String email) {
         this.name = name;
@@ -77,5 +86,13 @@ public class Translator {
 
     public void setModified(LocalDateTime modified) {
         this.modified = modified;
+    }
+
+    public Set<TranslationSkill> getTranslationSkills() {
+        return translationSkills;
+    }
+
+    public void setTranslationSkills(Set<TranslationSkill> translationSkills) {
+        this.translationSkills = translationSkills;
     }
 }
