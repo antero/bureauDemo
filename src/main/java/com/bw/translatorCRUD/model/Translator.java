@@ -16,7 +16,7 @@ import java.util.Set;
 @EntityListeners(AuditingEntityListener.class)
 public class Translator {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @NotEmpty(message = "Name must not be empty")
     private String name;
