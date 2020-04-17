@@ -84,7 +84,7 @@ class TranslatorServiceImplTest {
 
     @Test
     void deleteByIdWithInvalidId() {
-        assertThrows(TranslatorNotFoundException.class, () -> translatorService.deleteById(1L));
+        assertThrows(TranslatorNotFoundException.class, () -> translatorService.deleteById(0L));
     }
 
     @Test
