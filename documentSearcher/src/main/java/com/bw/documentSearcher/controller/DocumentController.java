@@ -20,7 +20,12 @@ public class DocumentController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> saveAll(List<Document> documents) {
+    public ResponseEntity<Object> saveAll(@RequestBody List<Document> documents) {
         return ResponseEntity.ok(documentService.saveAll(documents));
+    }
+
+    @GetMapping
+    public ResponseEntity<Object> findAll() {
+        return ResponseEntity.ok(documentService.findAll());
     }
 }

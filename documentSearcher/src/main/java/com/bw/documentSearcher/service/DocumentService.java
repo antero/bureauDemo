@@ -8,4 +8,6 @@ public interface DocumentService {
     List<Document> findByText(String query);
 
     List<Document> saveAll(List<Document> documents);
+
+    List<Document> findAll();
 }
