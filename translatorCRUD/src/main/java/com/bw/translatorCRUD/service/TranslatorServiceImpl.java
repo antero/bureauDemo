@@ -4,7 +4,6 @@ import com.bw.translatorCRUD.exception.TranslatorNotFoundException;
 import com.bw.translatorCRUD.model.TranslationSkill;
 import com.bw.translatorCRUD.model.Translator;
 import com.bw.translatorCRUD.model.TranslatorDetails;
-import com.bw.translatorCRUD.repository.TranslationSkillRepository;
 import com.bw.translatorCRUD.repository.TranslatorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;

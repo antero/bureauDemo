@@ -22,4 +22,9 @@ public class DocumentController {
         List<Document> documents = documentService.fullTextSearch(query);
         return ResponseEntity.ok(documents);
     }
+
+    @GetMapping
+    public ResponseEntity<Object> findAll() {
+        return ResponseEntity.ok(documentService.findAll());
+    }
 }

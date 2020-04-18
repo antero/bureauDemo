@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface DocumentService {
     List<Document> fullTextSearch(String query);
+
+    List<Document> findAll();
 }
