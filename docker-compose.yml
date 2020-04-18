@@ -1,29 +1,49 @@
 version: '3'
 
 services:
-  postgres:
-    image: postgres:12-alpine
-    environment:
-      POSTGRES_PASSWORD: "Postgres2020!"
+  # postgres:
+  #   image: postgres:12-alpine
+  #   environment:
+  #     POSTGRES_PASSWORD: "Postgres2020!"
+  #   ports:
+  #     - "15432:5432"
+  #   volumes:
+  #     - ./postgresql:/var/lib/postgresql/data
+  #   networks:
+  #     - postgres-network
+
+  # pgadmin4:
+  #   image: dpage/pgadmin4
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: "admin"
+  #     PGADMIN_DEFAULT_PASSWORD: "admin"
+  #   ports:
+  #     - "16543:80"
+  #   depends_on:
+  #     - postgres
+  #   networks:
+  #     - postgres-network
+  translator_api:
+    image: gradle:6.3.0-jdk11
     ports:
-      - "15432:5432"
+      - "8080:8080"
+    working_dir: /code
     volumes:
-      - ./postgresql:/var/lib/postgresql/data
-    networks:
-      - postgres-network
-
-  pgadmin4:
-    image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: "admin"
-      PGADMIN_DEFAULT_PASSWORD: "admin"
+      - ./translatorCRUD:/code
+    command: >
+        bash -c "./gradlew bootJar
+        && ./gradlew bootRun"
+  document_searcher:
+    image: gradle:6.3.0-jdk11
     ports:
-      - "16543:80"
-    depends_on:
-      - postgres
-    networks:
-      - postgres-network
+      - "3000:8080"
+    working_dir: /code
+    volumes:
+      - ./documentSearcher:/code
+    command: >
+        bash -c "./gradlew bootJar
+        && ./gradlew bootRun"
 
-networks:
-  postgres-network:
-    driver: bridge
+# networks:
+#   postgres-network:
+#     driver: bridge
