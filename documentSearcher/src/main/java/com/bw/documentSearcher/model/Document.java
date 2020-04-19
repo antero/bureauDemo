@@ -9,7 +9,7 @@ public class Document {
     private long id;
     private String title;
     @Lob
-//    @Column(columnDefinition = "CLOB")
+    @Column(length = 10485760)
     private String body;
     private long translatorId;
 
