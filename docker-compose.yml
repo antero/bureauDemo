@@ -1,49 +1,59 @@
 version: '3'
 
 services:
-  # postgres:
-  #   image: postgres:12-alpine
-  #   environment:
-  #     POSTGRES_PASSWORD: "Postgres2020!"
+  db_translator:
+    image: postgres:12-alpine
+    environment:
+      POSTGRES_PASSWORD: "Postgres2020!"
+    ports:
+      - "54320:5432"
+    volumes:
+      - ./data_translator:/var/lib/postgresql/data
+    networks:
+      - postgres-network
+  db_document:
+    image: postgres:12-alpine
+    environment:
+      POSTGRES_PASSWORD: "Postgres2020!"
+    ports:
+      - "54321:5432"
+    volumes:
+      - ./data_document:/var/lib/postgresql/data
+    networks:
+      - postgres-network
+  pgadmin4:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "admin"
+      PGADMIN_DEFAULT_PASSWORD: "admin"
+    ports:
+      - "16543:80"
+    depends_on:
+      - db_translator
+      - db_document
+    networks:
+      - postgres-network
+  # translator_api:
+  #   image: gradle:6.3.0-jdk11
   #   ports:
-  #     - "15432:5432"
+  #     - "8080:8080"
+  #   working_dir: /code
   #   volumes:
-  #     - ./postgresql:/var/lib/postgresql/data
-  #   networks:
-  #     - postgres-network
-
-  # pgadmin4:
-  #   image: dpage/pgadmin4
-  #   environment:
-  #     PGADMIN_DEFAULT_EMAIL: "admin"
-  #     PGADMIN_DEFAULT_PASSWORD: "admin"
+  #     - ./translatorCRUD:/code
+  #   command: >
+  #       bash -c "./gradlew bootJar
+  #       && ./gradlew bootRun"
+  # document_searcher:
+  #   image: gradle:6.3.0-jdk11
   #   ports:
-  #     - "16543:80"
-  #   depends_on:
-  #     - postgres
-  #   networks:
-  #     - postgres-network
-  translator_api:
-    image: gradle:6.3.0-jdk11
-    ports:
-      - "8080:8080"
-    working_dir: /code
-    volumes:
-      - ./translatorCRUD:/code
-    command: >
-        bash -c "./gradlew bootJar
-        && ./gradlew bootRun"
-  document_searcher:
-    image: gradle:6.3.0-jdk11
-    ports:
-      - "3000:8080"
-    working_dir: /code
-    volumes:
-      - ./documentSearcher:/code
-    command: >
-        bash -c "./gradlew bootJar
-        && ./gradlew bootRun"
+  #     - "3000:8080"
+  #   working_dir: /code
+  #   volumes:
+  #     - ./documentSearcher:/code
+  #   command: >
+  #       bash -c "./gradlew bootJar
+  #       && ./gradlew bootRun"
 
-# networks:
-#   postgres-network:
-#     driver: bridge
+networks:
+  postgres-network:
+    driver: bridge
