@@ -9,8 +9,6 @@ services:
       - "54320:5432"
     volumes:
       - ./data_translator:/var/lib/postgresql/data
-    networks:
-      - postgres-network
   db_document:
     image: postgres:12-alpine
     environment:
@@ -19,8 +17,6 @@ services:
       - "54321:5432"
     volumes:
       - ./data_document:/var/lib/postgresql/data
-    networks:
-      - postgres-network
   pgadmin4:
     image: dpage/pgadmin4
     environment:
@@ -31,29 +27,29 @@ services:
     depends_on:
       - db_translator
       - db_document
-    networks:
-      - postgres-network
-  # translator_api:
-  #   image: gradle:6.3.0-jdk11
-  #   ports:
-  #     - "8080:8080"
-  #   working_dir: /code
-  #   volumes:
-  #     - ./translatorCRUD:/code
-  #   command: >
-  #       bash -c "./gradlew bootJar
-  #       && ./gradlew bootRun"
-  # document_searcher:
-  #   image: gradle:6.3.0-jdk11
-  #   ports:
-  #     - "3000:8080"
-  #   working_dir: /code
-  #   volumes:
-  #     - ./documentSearcher:/code
-  #   command: >
-  #       bash -c "./gradlew bootJar
-  #       && ./gradlew bootRun"
-
-networks:
-  postgres-network:
-    driver: bridge
+  translator_api:
+    image: gradle:6.3.0-jdk11
+    ports:
+      - "8080:8080"
+    working_dir: /code
+    volumes:
+      - ./translatorCRUD:/code
+    depends_on:
+      - db_translator
+    command: >
+        bash -c "./gradlew bootJar
+        && ./gradlew bootRun"
+    network_mode: "host"
+  document_searcher:
+    image: gradle:6.3.0-jdk11
+    ports:
+      - "8081:8081"
+    working_dir: /code
+    volumes:
+      - ./documentSearcher:/code
+    depends_on:
+      - db_document
+    command: >
+        bash -c "./gradlew bootJar
+        && ./gradlew bootRun"
+    network_mode: "host"
