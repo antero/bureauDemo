@@ -1,5 +1,6 @@
 package com.bw.translatorCRUD.service;
 
+import com.bw.translatorCRUD.exception.TranslationSkillNotFoundException;
 import com.bw.translatorCRUD.exception.TranslatorNotFoundException;
 import com.bw.translatorCRUD.model.TranslationSkill;
 import com.bw.translatorCRUD.repository.TranslationSkillRepository;
@@ -23,7 +24,7 @@ public class TranslationSkillServiceImpl implements TranslationSkillService {
     @Override
     public TranslationSkill findById(Long id) {
         return translationSkillRepository.findById(id)
-                                         .orElseThrow(() -> new TranslatorNotFoundException(id));
+                                         .orElseThrow(() -> new TranslationSkillNotFoundException(id));
     }
 
     @Override

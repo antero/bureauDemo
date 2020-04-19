@@ -1,10 +1,12 @@
 package com.bw.translatorCRUD.service;
 
+import com.bw.translatorCRUD.exception.EmailAlreadyExistsException;
 import com.bw.translatorCRUD.exception.TranslatorNotFoundException;
 import com.bw.translatorCRUD.model.TranslationSkill;
 import com.bw.translatorCRUD.model.Translator;
 import com.bw.translatorCRUD.model.TranslatorDetails;
 import com.bw.translatorCRUD.repository.TranslatorRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,6 +24,11 @@ class TranslatorServiceImplTest {
 
     @Autowired
     private TranslatorService translatorService;
+
+    @AfterEach
+    void clearDatabase() {
+        translatorRepository.deleteAll();
+    }
 
     @Test
     void findAll() {
@@ -48,6 +55,15 @@ class TranslatorServiceImplTest {
     }
 
     @Test
+    void createThrowsEmailAlreadyExists() {
+        Translator t1 = new Translator("Fulano Silva", "fulano@gmail.com");
+        Translator t2 = new Translator("Fulano Silva", "fulano@gmail.com");
+
+        assertNotNull(translatorService.create(t1));
+        assertThrows(EmailAlreadyExistsException.class, () -> translatorService.create(t2));
+    }
+
+    @Test
     void findById() {
         Translator t1 = new Translator("Fulano Silva", "fulano@gmail.com");
         translatorRepository.save(t1);
@@ -55,10 +71,8 @@ class TranslatorServiceImplTest {
     }
 
     @Test
-    void findByIdWithInvalidId() {
+    void findByThrowsTranslatorNotFound() {
         assertThrows(TranslatorNotFoundException.class, () -> translatorService.findById(0L));
-        assertThrows(TranslatorNotFoundException.class, () -> translatorService.findById(-1L));
-        assertThrows(TranslatorNotFoundException.class, () -> translatorService.findById(1000L));
     }
 
     @Test
@@ -83,7 +97,7 @@ class TranslatorServiceImplTest {
     }
 
     @Test
-    void deleteByIdWithInvalidId() {
+    void deleteByIdThrowsTranslatorNotFound() {
         assertThrows(TranslatorNotFoundException.class, () -> translatorService.deleteById(0L));
     }
 

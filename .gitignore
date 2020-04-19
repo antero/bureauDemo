@@ -5,6 +5,8 @@ build/
 !**/src/main/**
 !**/src/test/**
 postgresql
+data_document
+data_translator
 
 ### STS ###
 .apt_generated

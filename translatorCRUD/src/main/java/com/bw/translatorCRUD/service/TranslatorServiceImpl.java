@@ -1,5 +1,6 @@
 package com.bw.translatorCRUD.service;
 
+import com.bw.translatorCRUD.exception.EmailAlreadyExistsException;
 import com.bw.translatorCRUD.exception.TranslatorNotFoundException;
 import com.bw.translatorCRUD.model.TranslationSkill;
 import com.bw.translatorCRUD.model.Translator;
@@ -28,11 +29,15 @@ public class TranslatorServiceImpl implements TranslatorService {
 
     @Override
     public Translator create(Translator translator) {
-        List<TranslationSkill> skills = new ArrayList<TranslationSkill>(
+        if (translatorRepository.findByEmail(translator.getEmail()).isPresent()) {
+            throw new EmailAlreadyExistsException(translator.getEmail());
+        }
+
+        List<TranslationSkill> skills = new ArrayList<>(
                 Optional.ofNullable(translator.getTranslationSkills()).orElse(new HashSet<>())
         );
         Optional.ofNullable(translator.getTranslationSkills()).ifPresent(Set::clear);
-        addTranslationSkillToTranslatorObject(translator, skills);
+        addTranslationSkillsToTranslatorObject(translator, skills);
 
         return translatorRepository.save(translator);
     }
@@ -65,12 +70,12 @@ public class TranslatorServiceImpl implements TranslatorService {
     @Override
     public Translator addTranslationSkills(Long id, List<TranslationSkill> translationSkills) {
         Translator translator = findById(id);
-        addTranslationSkillToTranslatorObject(translator, translationSkills);
+        addTranslationSkillsToTranslatorObject(translator, translationSkills);
 
         return translatorRepository.save(translator);
     }
 
-    private void addTranslationSkillToTranslatorObject(Translator translator, List<TranslationSkill> translationSkills) {
+    private void addTranslationSkillsToTranslatorObject(Translator translator, List<TranslationSkill> translationSkills) {
         LinkedHashSet<Pair<String, String>> skillsHashSet = new LinkedHashSet<>(
                 translationSkills.stream().map(s -> Pair.of(s.getSourceLanguage(), s.getTargetLanguage()))
                         .collect(Collectors.toList())

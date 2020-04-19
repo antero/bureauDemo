@@ -19,17 +19,25 @@ import java.util.stream.Collectors;
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(Exception.class)
     public final ResponseEntity<Object> handleAllExceptions(Exception ex, WebRequest request) {
-        List<String> details = new ArrayList<>();
-        details.add(ex.getLocalizedMessage());
-        ErrorResponse error = new ErrorResponse("Server error", details);
+        ErrorResponse error = new ErrorResponse("Server error", getDetailsFromException(ex));
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(TranslatorNotFoundException.class)
     public final ResponseEntity<Object> handleTranslatorNotFoundException(TranslatorNotFoundException ex, WebRequest request) {
-        List<String> details = new ArrayList<>();
-        details.add(ex.getLocalizedMessage());
-        ErrorResponse error = new ErrorResponse("Translator not found", details);
+        ErrorResponse error = new ErrorResponse("Translator not found", getDetailsFromException(ex));
+        return new ResponseEntity(error, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(EmailAlreadyExistsException.class)
+    public final ResponseEntity<Object> handleEmailAlreadyExistsException(EmailAlreadyExistsException ex, WebRequest request) {
+        ErrorResponse error = new ErrorResponse("Email already exists", getDetailsFromException(ex));
+        return new ResponseEntity(error, HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(TranslationSkillNotFoundException.class)
+    public final ResponseEntity<Object> handleTranslationSkillNotFoundException(TranslationSkillNotFoundException ex, WebRequest request) {
+        ErrorResponse error = new ErrorResponse("Translation skill not found", getDetailsFromException(ex));
         return new ResponseEntity(error, HttpStatus.NOT_FOUND);
     }
 
@@ -41,5 +49,11 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
         ErrorResponse error = new ErrorResponse("Validation Failed", details);
         return new ResponseEntity(error, HttpStatus.BAD_REQUEST);
+    }
+
+    private List<String> getDetailsFromException(Exception ex) {
+        List<String> details = new ArrayList<>();
+        details.add(ex.getLocalizedMessage());
+        return details;
     }
 }
