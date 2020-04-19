@@ -3,6 +3,7 @@ package com.bw.translatorCRUD.model;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import javax.validation.constraints.Email;
+import java.util.List;
 
 @JsonPropertyOrder({ "id", "name", "email" })
 public class TranslatorDetails {
@@ -10,6 +11,7 @@ public class TranslatorDetails {
     private String name;
     @Email(message = "Email must be a valid email")
     private String email;
+    private List<TranslationSkill> translationSkills;
 
     public TranslatorDetails() {}
 
@@ -49,5 +51,13 @@ public class TranslatorDetails {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public List<TranslationSkill> getTranslationSkills() {
+        return translationSkills;
+    }
+
+    public void setTranslationSkills(List<TranslationSkill> translationSkills) {
+        this.translationSkills = translationSkills;
     }
 }

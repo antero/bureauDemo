@@ -52,8 +52,17 @@ public class TranslatorServiceImpl implements TranslatorService {
     public Translator update(Long id, TranslatorDetails translatorDetails) {
         Translator translator = findById(id);
 
+        String newEmail = Optional.ofNullable(translatorDetails.getEmail()).orElse(translator.getEmail());
+        if (!newEmail.equals(translator.getEmail())
+                && translatorRepository.findByEmail(newEmail).isPresent()) {
+            throw new EmailAlreadyExistsException(newEmail);
+        }
+
         translator.setName(Optional.ofNullable(translatorDetails.getName()).orElse(translator.getName()));
-        translator.setEmail(Optional.ofNullable(translatorDetails.getEmail()).orElse(translator.getEmail()));
+        translator.setEmail(newEmail);
+
+        List<TranslationSkill> skills = Optional.ofNullable(translatorDetails.getTranslationSkills()).orElse(new ArrayList<>());
+        addTranslationSkillsToTranslatorObject(translator, skills);
 
         return translatorRepository.save(translator);
     }

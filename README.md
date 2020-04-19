@@ -82,9 +82,21 @@ Updates translator with `{id}` and expects a request body in the following forma
 ```json
 {
   "name": "New Fulano Name",
-    "email": "new_fulano@mail.com"
+  "email": "new_fulano@mail.com",
+  "translationSkills": [
+    {
+      "sourceLanguage": "pt_br",
+      "targetLanguage": "en_us"
+    },
+    {
+      "sourceLanguage": "en_us",
+      "targetLanguage": "pt_br"
+    }
+  ]
 }
 ```
+
+The given `translationSkills` will not replace the ones the translator already had, but will actually be added to them.
 
 ### `POST /translators/{id}/addSkills`
 
